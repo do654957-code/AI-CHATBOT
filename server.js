@@ -11,15 +11,11 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-
-
 const client = new OpenAI({
   apiKey: process.env['OPENAI_API_KEY'], // This is the default and can be omitted
 });
 
-
 app.post("/api/chat", async (req, res) => {
-
   try {
     const { message, level } = req.body;
 
@@ -30,21 +26,21 @@ app.post("/api/chat", async (req, res) => {
     // });
     // console.log(completion.choices[0].message.content);
 
-const response = await client.responses.create({
- model: "gpt-5-mini",
-    input: prompt,
-});
+    const response = await client.responses.create({
+      model: "gpt-5-mini",
+      input: prompt,
+    });
 
-console.log(response.output_text);
+    console.log(response.output_text);
 
- console.log(" xy ly client.chat.completions.create end");
+    console.log(" xy ly client.chat.completions.create end");
     //res.json({ reply: completion.choices[0].message.content });
-    res.json({ reply: response.output_text});
-    
+    res.json({ reply: response.output_text });
+
   } catch (err) {
     console.log(err);
     res.json({ reply: err.error.message });
-   // res.status(err.status).json({ error: err.error.message });
+    // res.status(err.status).json({ error: err.error.message });
   }
 });
 
@@ -81,5 +77,11 @@ app.post("/api/speech", async (req, res) => {
   }
 });
 
-const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => console.log("Server running on port " + PORT));
+// For Vercel serverless functions, export the app
+export default app;
+
+// For local development, keep the listen
+if (process.env.NODE_ENV !== 'production') {
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => console.log("Server running on port " + PORT));
+}
