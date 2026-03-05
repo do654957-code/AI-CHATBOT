@@ -8,15 +8,16 @@ export default async function handler(req, res) {
 
   try {
 
-    const { message } = req.body;
+    const { message, level } = req.body;
 
-    const openai = new OpenAI({
+    const client = new OpenAI({
       apiKey: process.env.OPENAI_API_KEY
     });
 
-    const completion = await openai.chat.completions.create({
+    const completion = await client.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
+        { role: "system", content: "You are an English tutor." },
         { role: "user", content: message }
       ]
     });
@@ -26,13 +27,7 @@ export default async function handler(req, res) {
     });
 
   } catch (error) {
-
-    console.error(error);
-
-    res.status(500).json({
-      error: "AI error"
-    });
-
+    res.status(500).json({ error: error.message });
   }
 
 }
