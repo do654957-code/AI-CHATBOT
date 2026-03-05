@@ -26,16 +26,14 @@ app.post("/api/chat", async (req, res) => {
     // });
     // console.log(completion.choices[0].message.content);
 
-    const response = await client.responses.create({
-      model: "gpt-5-mini",
-      input: prompt,
+    const completion = await client.chat.completions.create({
+      model: "gpt-4",
+      messages: [{ role: "user", content: prompt }],
     });
 
-    console.log(response.output_text);
+    console.log(completion.choices[0].message.content);
 
-    console.log(" xy ly client.chat.completions.create end");
-    //res.json({ reply: completion.choices[0].message.content });
-    res.json({ reply: response.output_text });
+    res.json({ reply: completion.choices[0].message.content });
 
   } catch (err) {
     console.log(err);
@@ -56,7 +54,7 @@ app.post("/api/speech", async (req, res) => {
 
       const transcript = await client.audio.transcriptions.create({
         file: audio.filepath,
-        model: "gpt-4o-mini-tts",
+        model: "whisper-1",
       });
 
       const completion = await client.chat.completions.create({
