@@ -121,7 +121,7 @@ function App() {
       setShowTyping(false);
 
       try {
-        const res = await axios.post("https://ai-chatbot-sepia-iota-39.vercel.app", {
+        const res = await axios.post("/api/chat", {
           message: text,
           level,
         });
